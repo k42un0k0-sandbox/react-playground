@@ -1,3 +1,14 @@
-export default function Zustand() {
-  return <div>zustand</div>;
+import { motion } from "framer-motion";
+
+export default function Constate() {
+  return (
+    <motion.main
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ ease: "easeOut", duration: 1 }}
+    >
+      zustand
+    </motion.main>
+  );
 }

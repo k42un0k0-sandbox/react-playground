@@ -27,7 +27,6 @@ export default function Modal({
         <Fade
           open={open}
           onExit={() => {
-            console.log(1111);
             setState(false);
           }}
         >
@@ -50,21 +49,29 @@ function Fade({
 }) {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
-    ref.current.style.opacity = open ? "1" : "0";
+    setTimeout(() => {
+      ref.current.style.opacity = open ? "1" : "0";
+    });
   }, [open]);
-  console.log(open);
   return (
-    <Transition in={open} onExited={onExit} timeout={duration}>
-      {() => (
-        <div
-          ref={ref}
-          style={{
-            ...defaultStyle,
-          }}
-        >
-          {children}
-        </div>
-      )}
+    <Transition
+      in={open}
+      onExited={onExit}
+      timeout={{ enter: 0, exit: duration }}
+    >
+      {(state) => {
+        console.log(state);
+        return (
+          <div
+            ref={ref}
+            style={{
+              ...defaultStyle,
+            }}
+          >
+            {children}
+          </div>
+        );
+      }}
     </Transition>
   );
 }

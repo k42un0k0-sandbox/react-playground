@@ -43,6 +43,7 @@ export default function Sidebar() {
           "state-management/jotai",
           "state-management/zustand",
           "portal-modal",
+          "animation/tinder",
         ].map((text, index) => (
           <Link key={text} href={"/" + text} passHref>
             <ListItem button component="a">
