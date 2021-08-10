@@ -9,61 +9,54 @@ import {
 import React, { useState } from "react";
 import constate from "constate";
 import Link from "next/link";
+import { pagesPath } from "../../lib/$path";
 
 function useDrawer() {
   const [open, setOpen] = useState(false);
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        "key" in event &&
-        (event.key === "Tab" || event.key === "Shift")
-      ) {
-        return;
-      }
-
-      setOpen(open);
-    };
+  const toggleDrawer = (open: boolean) => (event: React.MouseEvent) => {
+    setOpen(open);
+  };
   return { open, toggleDrawer };
 }
 export const [DrawerProvider, useDrawerContext] = constate(useDrawer);
 
-export default function Sidebar() {
+const RecursiveListItem = ({ path }: Record<string, any>) => {
   const classes = useStyles();
-  const { open, toggleDrawer } = useDrawerContext();
-  const list = () => (
-    <div
-      className={classes.list}
-      role="presentation"
-      onClick={toggleDrawer(false)}
-    >
-      <List>
-        {[
-          "state-management/constate",
-          "state-management/jotai",
-          "state-management/zustand",
-          "portal-modal",
-          "animation/tinder",
-        ].map((text, index) => (
-          <Link key={text} href={"/" + text} passHref>
-            <ListItem button component="a">
-              <ListItemText primary={text} />
-            </ListItem>
-          </Link>
-        ))}
-      </List>
-    </div>
+
+  return (
+    <>
+      {Object.keys(path).map((key) => {
+        if (key === "$url") {
+          const pathObj = path[key]();
+          return (
+            <>
+              <Link key={pathObj.pathname} href={pathObj} passHref>
+                <ListItem button component="a" className={classes.list}>
+                  <ListItemText primary={pathObj.pathname} />
+                </ListItem>
+              </Link>
+            </>
+          );
+        }
+        return <RecursiveListItem key={key} path={path[key]} />;
+      })}
+    </>
   );
+};
+export default function Sidebar() {
+  const { open, toggleDrawer } = useDrawerContext();
 
   return (
     <Drawer anchor="left" open={open} onClose={toggleDrawer(false)}>
-      {list()}
+      <List onClick={toggleDrawer(false)}>
+        <RecursiveListItem path={pagesPath} />
+      </List>
     </Drawer>
   );
 }
 
 const useStyles = makeStyles({
   list: {
-    width: 250,
+    paddingRight: 50,
   },
 });

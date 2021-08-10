@@ -9,6 +9,7 @@ import {
   useDragControls,
 } from "framer-motion";
 import { useState } from "react";
+import Fade from "../../components/transition/Fade";
 
 export default function Constate() {
   const [inVisible, setInVisible] = useState(false);
@@ -31,11 +32,7 @@ export default function Constate() {
     dragControls.start(event, { snapToCursor: true });
   }
   return (
-    <motion.main
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <Fade>
       <div onPointerDown={startDrag}>ｱｱｱ</div>
       <motion.div drag="x" dragControls={dragControls}>
         いいい
@@ -98,6 +95,6 @@ export default function Constate() {
           へぉ
         </motion.div>
       )}
-    </motion.main>
+    </Fade>
   );
 }

@@ -1,14 +1,6 @@
 import { motion } from "framer-motion";
+import Fade from "../../components/transition/Fade";
 
 export default function Constate() {
-  return (
-    <motion.main
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ ease: "easeOut", duration: 1 }}
-    >
-      zustand
-    </motion.main>
-  );
+  return <Fade transition={{ ease: "easeOut", duration: 1 }}>zustand</Fade>;
 }
