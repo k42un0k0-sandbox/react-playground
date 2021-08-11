@@ -31,6 +31,9 @@ export const pagesPath = {
       $url: (url?: { hash?: string }) => ({ pathname: '/three/iconview' as const, hash: url?.hash })
     },
     shader: {
+      canvas: {
+        $url: (url?: { hash?: string }) => ({ pathname: '/three/shader/canvas' as const, hash: url?.hash })
+      },
       $url: (url?: { hash?: string }) => ({ pathname: '/three/shader' as const, hash: url?.hash })
     }
   },
