@@ -6,7 +6,10 @@ export class BasicView {
   scene: THREE.Scene;
   renderer: THREE.WebGLRenderer;
   controls?: OrbitControls;
+  raf: number = 0;
+  containerElement: HTMLElement;
   constructor(containerElement: HTMLElement) {
+    this.containerElement = containerElement;
     // camera
     this.camera = new THREE.PerspectiveCamera(
       45,
@@ -23,7 +26,7 @@ export class BasicView {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     window.addEventListener("resize", this.handleResize.bind(this));
-    containerElement.appendChild(this.renderer.domElement);
+    this.containerElement.appendChild(this.renderer.domElement);
 
     // scene
     this.scene = new THREE.Scene();
@@ -38,6 +41,10 @@ export class BasicView {
    */
   public startRendering(): void {
     this.update();
+  }
+  public stopRendering(): void {
+    cancelAnimationFrame(this.raf);
+    this.containerElement.removeChild(this.renderer.domElement);
   }
 
   /**
@@ -70,7 +77,7 @@ export class BasicView {
    * @private
    */
   protected update(): void {
-    requestAnimationFrame(this.update.bind(this));
+    this.raf = requestAnimationFrame(this.update.bind(this));
 
     this.controls?.update();
     this.onTick();

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { BasicView } from "./BasicView";
+import { BasicView } from "../BasicView";
 import gsap, { Cubic, Expo } from "gsap";
 import MotionPathPlugin from "gsap/dist/MotionPathPlugin";
 import { IconParticleList } from "./IconParticleList";
