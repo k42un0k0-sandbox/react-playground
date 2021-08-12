@@ -23,7 +23,7 @@ export class TouchTexture {
 
     this.initTexture();
     this.canvas.style.transformOrigin = "top left";
-    this.canvas.style.transform = "scale(0.1)";
+    this.canvas.style.transform = "scale(1)";
     document.body.appendChild(this.canvas);
   }
 

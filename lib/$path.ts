@@ -40,6 +40,9 @@ export const pagesPath = {
         },
         $02: {
           $url: (url?: { hash?: string }) => ({ pathname: '/three/shader/canvas/02' as const, hash: url?.hash })
+        },
+        vtf: {
+          $url: (url?: { hash?: string }) => ({ pathname: '/three/shader/canvas/vtf' as const, hash: url?.hash })
         }
       },
       $url: (url?: { hash?: string }) => ({ pathname: '/three/shader' as const, hash: url?.hash })

@@ -8,6 +8,7 @@ export default function Iconview() {
     await loadFont();
     const view = new IconViewInteractive(document.body);
     view.startRendering();
+    view.debug();
     return view;
   });
   return null;

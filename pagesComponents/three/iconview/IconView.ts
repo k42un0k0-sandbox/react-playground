@@ -11,22 +11,26 @@ export class IconView extends BasicView {
   protected _hue: number = 0.6;
   CANVAS_W: number = 250;
   CANVAS_H: number = 40;
+  timeline: gsap.core.Timeline;
+  existDotList: boolean[][];
+  iconParticleList: IconParticleList;
+  complete = false;
   constructor(containerElement: HTMLElement) {
     super(containerElement);
     this.camera.position.z = 5000;
     this.addLight();
     this.addBG();
 
-    this.createWord();
+    this.createLetter("HELLO");
   }
   private addBG() {
     const geometry = new THREE.PlaneGeometry(5000, 5000, 1, 1);
 
     const material = new THREE.MeshPhysicalMaterial({});
 
-    const word = new THREE.Mesh(geometry, material);
-    word.position.z = -100;
-    this.scene.add(word);
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.z = -100;
+    this.scene.add(mesh);
   }
 
   private addLight() {
@@ -35,13 +39,13 @@ export class IconView extends BasicView {
     this.scene.add(light);
   }
 
-  createWord() {
-    this.createLetter("hello");
-  }
-
   createLetter(letter: string) {
-    const canvas = this.createCanvas(letter, 42, this.CANVAS_W, this.CANVAS_H);
-    const timeline = gsap.timeline();
+    const canvas = this.createCanvas(letter, 40, this.CANVAS_W, this.CANVAS_H);
+    this.timeline = gsap.timeline({
+      onComplete: () => {
+        this.complete = true;
+      },
+    });
     const ctx = canvas.getContext("2d");
 
     // 透過領域を判定する
@@ -50,17 +54,18 @@ export class IconView extends BasicView {
       this.CANVAS_H,
       ctx.getImageData(0, 0, this.CANVAS_W, this.CANVAS_H).data
     );
-    const iconParticleList = new IconParticleList(
+    this.existDotList = existDotList;
+    this.iconParticleList = new IconParticleList(
       this.CANVAS_H * this.CANVAS_W - existDotCount
     );
     // レターのモーションを作成する
     let cnt = 0;
-    existDotList.forEach((item, i) => {
+    this.existDotList.forEach((item, i) => {
       item.forEach((value, j) => {
         // 透過していたらパスする
         if (value == true) return;
         // add particle to scene
-        const word: THREE.Mesh = iconParticleList.get(cnt++);
+        const word: THREE.Mesh = this.iconParticleList.get(cnt++);
 
         // TODO: hslよくわからん
         (word.material as THREE.MeshLambertMaterial).color.setHSL(
@@ -75,7 +80,7 @@ export class IconView extends BasicView {
 
         // animate visible
         word.visible = false;
-        timeline.set(word, { visible: true }, delay);
+        this.timeline.set(word, { visible: true }, delay);
 
         // animate position
         const toObj = {
@@ -91,7 +96,7 @@ export class IconView extends BasicView {
         };
         word.position.set(fromObj.x, fromObj.y, fromObj.z);
 
-        timeline.to(
+        this.timeline.to(
           word.position,
           {
             duration: 7,
@@ -122,7 +127,7 @@ export class IconView extends BasicView {
 
         word.rotation.z = fromRotationObj.z;
 
-        timeline.to(
+        this.timeline.to(
           word.rotation,
           {
             duration: 6,
@@ -143,15 +148,15 @@ export class IconView extends BasicView {
   ): HTMLCanvasElement {
     // レターオブジェクトを生成します。
     const canvas = createCanvas(w, h);
-
     const context = canvas.getContext("2d");
 
     context.fillStyle = "white";
     context.font = fontSize + "px serif";
     context.textAlign = "center";
     context.textBaseline = "top";
+    canvas.style.border = "1px solid white";
 
-    context.fillText(label, w / 2, 0);
+    context.fillText(label, w / 2, 4);
 
     return canvas;
   }
