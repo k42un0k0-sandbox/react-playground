@@ -11,7 +11,7 @@ import {
   create_shader,
   create_vbo,
   set_attribute,
-  sphere,
+  sphere
 } from "@/pagesComponents/three/shader/canvas/lib";
 
 export default function Canvas() {
