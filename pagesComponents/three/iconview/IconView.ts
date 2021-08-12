@@ -9,7 +9,8 @@ import { imageBinarization } from "./imageBinarization";
 gsap.registerPlugin(MotionPathPlugin);
 export class IconView extends BasicView {
   protected _hue: number = 0.6;
-
+  CANVAS_W: number = 250;
+  CANVAS_H: number = 40;
   constructor(containerElement: HTMLElement) {
     super(containerElement);
     this.camera.position.z = 5000;
@@ -17,8 +18,6 @@ export class IconView extends BasicView {
     this.addBG();
 
     this.createWord();
-    this.startRendering();
-    this.debug();
   }
   private addBG() {
     const geometry = new THREE.PlaneGeometry(5000, 5000, 1, 1);
@@ -41,20 +40,18 @@ export class IconView extends BasicView {
   }
 
   createLetter(letter: string) {
-    const CANVAS_W: number = 250;
-    const CANVAS_H: number = 40;
-    const canvas = this.createCanvas(letter, 42, CANVAS_W, CANVAS_H);
+    const canvas = this.createCanvas(letter, 42, this.CANVAS_W, this.CANVAS_H);
     const timeline = gsap.timeline();
     const ctx = canvas.getContext("2d");
 
     // 透過領域を判定する
     var { existDotCount, existDotList } = imageBinarization(
-      CANVAS_W,
-      CANVAS_H,
-      ctx.getImageData(0, 0, CANVAS_W, CANVAS_H).data
+      this.CANVAS_W,
+      this.CANVAS_H,
+      ctx.getImageData(0, 0, this.CANVAS_W, this.CANVAS_H).data
     );
     const iconParticleList = new IconParticleList(
-      CANVAS_H * CANVAS_W - existDotCount
+      this.CANVAS_H * this.CANVAS_W - existDotCount
     );
     // レターのモーションを作成する
     let cnt = 0;

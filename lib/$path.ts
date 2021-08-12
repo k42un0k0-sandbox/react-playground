@@ -27,12 +27,20 @@ export const pagesPath = {
     }
   },
   three: {
+    iconview_interactive: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/three/iconview-interactive' as const, hash: url?.hash })
+    },
     iconview: {
       $url: (url?: { hash?: string }) => ({ pathname: '/three/iconview' as const, hash: url?.hash })
     },
     shader: {
       canvas: {
-        $url: (url?: { hash?: string }) => ({ pathname: '/three/shader/canvas' as const, hash: url?.hash })
+        $01: {
+          $url: (url?: { hash?: string }) => ({ pathname: '/three/shader/canvas/01' as const, hash: url?.hash })
+        },
+        $02: {
+          $url: (url?: { hash?: string }) => ({ pathname: '/three/shader/canvas/02' as const, hash: url?.hash })
+        }
       },
       $url: (url?: { hash?: string }) => ({ pathname: '/three/shader' as const, hash: url?.hash })
     }

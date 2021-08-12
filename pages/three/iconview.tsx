@@ -6,7 +6,9 @@ import { useBasicview } from "../../pagesComponents/three/useBasicView";
 export default function Iconview() {
   useBasicview(async () => {
     await loadFont();
-    return new IconView(document.body);
+    const view = new IconView(document.body);
+    view.startRendering();
+    return view;
   });
   return null;
 }

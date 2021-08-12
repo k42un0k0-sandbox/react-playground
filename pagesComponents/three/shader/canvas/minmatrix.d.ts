@@ -6,4 +6,6 @@ export const matIV: new () => {
   multiply: (...args: any[]) => any;
   translate: (...args: any[]) => any;
   scale: (...args: any[]) => any;
+  rotate: (...args: any[]) => any;
+  inverse: (...args: any[]) => any;
 };

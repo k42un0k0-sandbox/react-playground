@@ -3,6 +3,7 @@ import vert from "@/pagesComponents/three/shader/canvas/vert.glsl";
 import frag from "@/pagesComponents/three/shader/canvas/frag.glsl";
 import { matIV } from "@/pagesComponents/three/shader/canvas/minmatrix";
 import {
+  create_ibo,
   create_program,
   create_shader,
   create_vbo,
@@ -42,8 +43,22 @@ export default function Canvas() {
     attStride[1] = 4;
 
     // モデル(頂点)データ
-    const vertex_position = [0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0];
-    const vertex_color = [
+    // 頂点属性を格納する配列
+    var vertex_position = [
+      0.0,
+      1.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0,
+      0.0,
+    ];
+    var vertex_color = [
       1.0,
       0.0,
       0.0,
@@ -54,9 +69,16 @@ export default function Canvas() {
       1.0,
       0.0,
       0.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
       1.0,
       1.0,
     ];
+
+    // 頂点のインデックスを格納する配列
+    var index = [0, 1, 2, 1, 2, 3];
 
     // VBOの生成
     var position_vbo = create_vbo(gl, vertex_position);
@@ -71,6 +93,15 @@ export default function Canvas() {
     gl.bindBuffer(gl.ARRAY_BUFFER, color_vbo);
     gl.enableVertexAttribArray(attLocation[1]);
     gl.vertexAttribPointer(attLocation[1], attStride[1], gl.FLOAT, false, 0, 0);
+
+    // IBOの生成
+    var ibo = create_ibo(gl, index);
+
+    // IBOをバインドして登録する
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+
+    // IBOをバインドして登録する
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
 
     // minMatrix.js を用いた行列関連処理
     // matIVオブジェクトを生成
@@ -91,6 +122,8 @@ export default function Canvas() {
     m.perspective(90, canvas.width / canvas.height, 0.1, 100, pMatrix);
     m.multiply(pMatrix, vMatrix, tmpMatrix);
     let count = 0;
+    // gl.enable(gl.CULL_FACE);
+    gl.enable(gl.DEPTH_TEST);
     function draw() {
       // canvasを初期化
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -119,13 +152,15 @@ export default function Canvas() {
       m.translate(mMatrix, [x, y, 0.0], mMatrix);
       const mul = Math.sin(((count % 200) / 100) * Math.PI) + 1.25;
       m.scale(mMatrix, [mul, mul, mul], mMatrix);
+      m.rotate(mMatrix, rad, [0, 0, 1], mMatrix);
 
       // モデル×ビュー×プロジェクション(二つ目のモデル)
       m.multiply(tmpMatrix, mMatrix, mvpMatrix);
 
       // uniformLocationへ座標変換行列を登録し描画する(二つ目のモデル)
       gl.uniformMatrix4fv(uniLocation, false, mvpMatrix);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      // インデックスを用いた描画命令
+      gl.drawElements(gl.TRIANGLES, index.length, gl.UNSIGNED_SHORT, 0);
 
       // コンテキストの再描画
       gl.flush();
