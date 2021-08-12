@@ -4,4 +4,6 @@ export const matIV: new () => {
   lookAt: (...args: any[]) => any;
   perspective: (...args: any[]) => any;
   multiply: (...args: any[]) => any;
+  translate: (...args: any[]) => any;
+  scale: (...args: any[]) => any;
 };

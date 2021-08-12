@@ -2,80 +2,11 @@ import { useEffect, useRef } from "react";
 import vert from "@/pagesComponents/three/shader/canvas/vert.glsl";
 import frag from "@/pagesComponents/three/shader/canvas/frag.glsl";
 import { matIV } from "@/pagesComponents/three/shader/canvas/minmatrix";
-function create_vbo(gl: WebGLRenderingContext, data: any) {
-  // バッファオブジェクトの生成
-  var vbo = gl.createBuffer();
-
-  // バッファをバインドする
-  gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-
-  // バッファにデータをセット
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
-
-  // バッファのバインドを無効化
-  gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-  // 生成した VBO を返して終了
-  return vbo;
-}
-function create_shader(gl: WebGLRenderingContext, type: string, text: string) {
-  // シェーダを格納する変数
-  var shader;
-
-  // scriptタグのtype属性をチェック
-  switch (type) {
-    // 頂点シェーダの場合
-    case "vert":
-      shader = gl.createShader(gl.VERTEX_SHADER);
-      break;
-
-    // フラグメントシェーダの場合
-    case "frag":
-      shader = gl.createShader(gl.FRAGMENT_SHADER);
-      break;
-    default:
-      return;
-  }
-
-  // 生成されたシェーダにソースを割り当てる
-  gl.shaderSource(shader, text);
-
-  // シェーダをコンパイルする
-  gl.compileShader(shader);
-
-  // シェーダが正しくコンパイルされたかチェック
-  if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    // 成功していたらシェーダを返して終了
-    return shader;
-  } else {
-    // 失敗していたらエラーログをアラートする
-    alert(gl.getShaderInfoLog(shader));
-  }
-}
-
-function create_program(gl: WebGLRenderingContext, vs, fs) {
-  // プログラムオブジェクトの生成
-  var program = gl.createProgram();
-
-  // プログラムオブジェクトにシェーダを割り当てる
-  gl.attachShader(program, vs);
-  gl.attachShader(program, fs);
-
-  // シェーダをリンク
-  gl.linkProgram(program);
-
-  // シェーダのリンクが正しく行なわれたかチェック
-  if (gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    // 成功していたらプログラムオブジェクトを有効にする
-    gl.useProgram(program);
-
-    // プログラムオブジェクトを返して終了
-    return program;
-  } else {
-    // 失敗していたらエラーログをアラートする
-    alert(gl.getProgramInfoLog(program));
-  }
-}
+import {
+  create_program,
+  create_shader,
+  create_vbo,
+} from "@/pagesComponents/three/shader/canvas/lib";
 
 export default function Canvas() {
   const ref = useRef<HTMLCanvasElement | null>(null);
@@ -86,8 +17,14 @@ export default function Canvas() {
     if (canvas == null) return;
     const gl = canvas.getContext("webgl");
 
-    gl.clearColor(1.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clearDepth(1.0);
+    console.log(
+      gl.COLOR_BUFFER_BIT.toString(2),
+      gl.DEPTH_BUFFER_BIT.toString(2),
+      (gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT).toString(2)
+    );
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     const v_shader = create_shader(gl, "vert", vert);
     const f_shader = create_shader(gl, "frag", frag);
 
@@ -95,57 +32,107 @@ export default function Canvas() {
     const prg = create_program(gl, v_shader, f_shader);
 
     // attributeLocationの取得
-    var attLocation = gl.getAttribLocation(prg, "position");
+    var attLocation = new Array(2);
+    attLocation[0] = gl.getAttribLocation(prg, "position");
+    attLocation[1] = gl.getAttribLocation(prg, "color");
 
-    // attributeの要素数(この場合は xyz の3要素)
-    var attStride = 3;
+    // attributeの要素数を配列に格納
+    var attStride = new Array(2);
+    attStride[0] = 3;
+    attStride[1] = 4;
 
     // モデル(頂点)データ
-    var vertex_position = [0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0];
+    const vertex_position = [0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -1.0, 0.0, 0.0];
+    const vertex_color = [
+      1.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      1.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      1.0,
+      1.0,
+    ];
 
     // VBOの生成
-    var vbo = create_vbo(gl, vertex_position);
+    var position_vbo = create_vbo(gl, vertex_position);
+    var color_vbo = create_vbo(gl, vertex_color);
 
-    // VBOをバインド
-    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+    // VBOをバインドし登録する(位置情報)
+    gl.bindBuffer(gl.ARRAY_BUFFER, position_vbo);
+    gl.enableVertexAttribArray(attLocation[0]);
+    gl.vertexAttribPointer(attLocation[0], attStride[0], gl.FLOAT, false, 0, 0);
 
-    // attribute属性を有効にする
-    gl.enableVertexAttribArray(attLocation);
-
-    // attribute属性を登録
-    gl.vertexAttribPointer(attLocation, attStride, gl.FLOAT, false, 0, 0);
+    // VBOをバインドし登録する(色情報)
+    gl.bindBuffer(gl.ARRAY_BUFFER, color_vbo);
+    gl.enableVertexAttribArray(attLocation[1]);
+    gl.vertexAttribPointer(attLocation[1], attStride[1], gl.FLOAT, false, 0, 0);
 
     // minMatrix.js を用いた行列関連処理
     // matIVオブジェクトを生成
     var m = new matIV();
 
+    // uniformLocationの取得
+    var uniLocation = gl.getUniformLocation(prg, "mvpMatrix");
+
     // 各種行列の生成と初期化
     var mMatrix = m.identity(m.create());
     var vMatrix = m.identity(m.create());
     var pMatrix = m.identity(m.create());
+    var tmpMatrix = m.identity(m.create());
     var mvpMatrix = m.identity(m.create());
 
-    // ビュー座標変換行列
-    m.lookAt([0.0, 1.0, 3.0], [0, 0, 0], [0, 1, 0], vMatrix);
-
-    // プロジェクション座標変換行列
+    // ビュー×プロジェクション座標変換行列
+    m.lookAt([0.0, 0.0, 3.0], [0, 0, 0], [0, 1, 0], vMatrix);
     m.perspective(90, canvas.width / canvas.height, 0.1, 100, pMatrix);
+    m.multiply(pMatrix, vMatrix, tmpMatrix);
+    let count = 0;
+    function draw() {
+      // canvasを初期化
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clearDepth(1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // 各行列を掛け合わせ座標変換行列を完成させる
-    m.multiply(pMatrix, vMatrix, mvpMatrix);
-    m.multiply(mvpMatrix, mMatrix, mvpMatrix);
+      // // 一つ目のモデルを移動するためのモデル座標変換行列
+      // m.translate(mMatrix, [1.5, 0.0, 0.0], mMatrix);
 
-    // uniformLocationの取得
-    var uniLocation = gl.getUniformLocation(prg, "mvpMatrix");
+      // // モデル×ビュー×プロジェクション(一つ目のモデル)
+      // m.multiply(tmpMatrix, mMatrix, mvpMatrix);
 
-    // uniformLocationへ座標変換行列を登録
-    gl.uniformMatrix4fv(uniLocation, false, mvpMatrix);
+      // // uniformLocationへ座標変換行列を登録し描画する(一つ目のモデル)
+      // gl.uniformMatrix4fv(uniLocation, false, mvpMatrix);
+      // gl.drawArrays(gl.TRIANGLES, 0, 3);
 
-    // モデルの描画
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+      // カウンタをインクリメントする
+      count++;
 
-    // コンテキストの再描画
-    gl.flush();
+      // カウンタを元にラジアンを算出
+      var rad = ((count % 360) * Math.PI) / 180;
+      // モデル1は円の軌道を描き移動する
+      var x = Math.cos(rad);
+      var y = Math.sin(rad);
+      m.identity(mMatrix);
+      m.translate(mMatrix, [x, y, 0.0], mMatrix);
+      const mul = Math.sin(((count % 200) / 100) * Math.PI) + 1.25;
+      m.scale(mMatrix, [mul, mul, mul], mMatrix);
+
+      // モデル×ビュー×プロジェクション(二つ目のモデル)
+      m.multiply(tmpMatrix, mMatrix, mvpMatrix);
+
+      // uniformLocationへ座標変換行列を登録し描画する(二つ目のモデル)
+      gl.uniformMatrix4fv(uniLocation, false, mvpMatrix);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      // コンテキストの再描画
+      gl.flush();
+      // ループのために再帰呼び出し
+      requestAnimationFrame(draw);
+    }
+    draw();
   }, []);
   return (
     <canvas
