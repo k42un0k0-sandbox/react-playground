@@ -24,6 +24,7 @@ export class TouchTexture {
     this.initTexture();
     this.canvas.style.transformOrigin = "top left";
     this.canvas.style.transform = "scale(1)";
+    this.canvas.style.border = "solid 1px white";
     document.body.appendChild(this.canvas);
   }
 

@@ -27,10 +27,13 @@ export const pagesPath = {
     }
   },
   three: {
-    iconview_interactive: {
-      $url: (url?: { hash?: string }) => ({ pathname: '/three/iconview-interactive' as const, hash: url?.hash })
-    },
     iconview: {
+      interactive: {
+        v2: {
+          $url: (url?: { hash?: string }) => ({ pathname: '/three/iconview/interactive/v2' as const, hash: url?.hash })
+        },
+        $url: (url?: { hash?: string }) => ({ pathname: '/three/iconview/interactive' as const, hash: url?.hash })
+      },
       $url: (url?: { hash?: string }) => ({ pathname: '/three/iconview' as const, hash: url?.hash })
     },
     mush: {

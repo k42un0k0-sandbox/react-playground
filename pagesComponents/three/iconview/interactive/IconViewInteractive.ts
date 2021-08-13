@@ -1,4 +1,4 @@
-import { IconView } from "../iconview/IconView";
+import { IconView } from "../IconView";
 import { TouchTexture } from "./TouchTexture";
 import * as THREE from "three";
 import { InteractiveControls } from "./InteractiveControls";

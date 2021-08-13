@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { changeUvs } from "./changeUvs";
-import { createCanvas } from "./createCanvas";
+import { createFontAwesomeCanvas } from "./canvas";
 
 export class IconParticleList {
   _matrixLength = 8;
@@ -16,8 +16,9 @@ export class IconParticleList {
     61755, // html5
   ];
   constructor(size: number) {
-    const canvas = this.createCanvas();
-    const texture = new THREE.CanvasTexture(canvas);
+    const texture = new THREE.CanvasTexture(
+      createFontAwesomeCanvas(this._matrixLength)
+    );
     this.createParticles(size, texture);
   }
   get(i: number) {
@@ -26,37 +27,6 @@ export class IconParticleList {
 
   pop() {
     return this._particleList.pop();
-  }
-
-  private createCanvas() {
-    const SIZE = 256;
-    const canvas = createCanvas(
-      SIZE * this._matrixLength,
-      SIZE * this._matrixLength
-    );
-    const context = canvas.getContext("2d");
-
-    // ------------------------------
-    // パーティクルのテクスチャアトラスを生成
-    // ------------------------------
-    const len = this._matrixLength * this._matrixLength;
-    for (let i = 0; i < len; i++) {
-      const char = String.fromCharCode(this.getRandomIcon());
-
-      const x = SIZE * (i % this._matrixLength) + SIZE / 2;
-      const y = SIZE * Math.floor(i / this._matrixLength) + SIZE / 2;
-
-      context.fillStyle = "white";
-      context.font = "200px FontAwesome";
-      context.textAlign = "center";
-      context.textBaseline = "middle";
-      context.fillText(char, x, y);
-    }
-    return canvas;
-  }
-
-  private getRandomIcon(): number {
-    return this.ICON_LIST[Math.floor(this.ICON_LIST.length * Math.random())];
   }
 
   protected createParticles(size: number, sharedTexture: THREE.Texture) {

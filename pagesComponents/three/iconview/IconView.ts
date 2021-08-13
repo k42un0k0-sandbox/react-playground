@@ -3,8 +3,8 @@ import { BasicView } from "../BasicView";
 import gsap, { Cubic, Expo } from "gsap";
 import MotionPathPlugin from "gsap/dist/MotionPathPlugin";
 import { IconParticleList } from "./IconParticleList";
-import { createCanvas } from "./createCanvas";
 import { imageBinarization } from "./imageBinarization";
+import { createLabelCanvas } from "./canvas";
 
 gsap.registerPlugin(MotionPathPlugin);
 export class IconView extends BasicView {
@@ -40,13 +40,17 @@ export class IconView extends BasicView {
   }
 
   createLetter(letter: string) {
-    const canvas = this.createCanvas(letter, 40, this.CANVAS_W, this.CANVAS_H);
     this.timeline = gsap.timeline({
       onComplete: () => {
         this.complete = true;
       },
     });
-    const ctx = canvas.getContext("2d");
+    const ctx = createLabelCanvas(
+      letter,
+      40,
+      this.CANVAS_W,
+      this.CANVAS_H
+    ).getContext("2d");
 
     // 透過領域を判定する
     var { existDotCount, existDotList } = imageBinarization(
@@ -69,7 +73,7 @@ export class IconView extends BasicView {
 
         // TODO: hslよくわからん
         (word.material as THREE.MeshLambertMaterial).color.setHSL(
-          this._hue + ((i * canvas.height) / existDotCount - 0.5) * 0.2,
+          this._hue + ((i * this.CANVAS_H) / existDotCount - 0.5) * 0.2,
           0.5,
           0.6 + 0.4 * Math.random()
         );
@@ -84,8 +88,8 @@ export class IconView extends BasicView {
 
         // animate position
         const toObj = {
-          x: (i - canvas.width / 2) * 30,
-          y: (canvas.height / 2 - j) * 30,
+          x: (i - this.CANVAS_W / 2) * 30,
+          y: (this.CANVAS_H / 2 - j) * 30,
           z: 0,
         };
 
@@ -138,25 +142,5 @@ export class IconView extends BasicView {
         );
       });
     });
-  }
-
-  createCanvas(
-    label: string,
-    fontSize: number,
-    w: number,
-    h: number
-  ): HTMLCanvasElement {
-    // レターオブジェクトを生成します。
-    const canvas = createCanvas(w, h);
-    const context = canvas.getContext("2d");
-
-    context.fillStyle = "white";
-    context.font = fontSize + "px serif";
-    context.textAlign = "center";
-    context.textBaseline = "top";
-
-    context.fillText(label, w / 2, 4);
-
-    return canvas;
   }
 }

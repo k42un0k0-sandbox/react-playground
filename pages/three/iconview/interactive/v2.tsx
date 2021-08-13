@@ -1,5 +1,4 @@
-import { IconViewInteractive } from "@/pagesComponents/three/iconview-interactive/IconViewInteractive";
-import { useEffect } from "react";
+import { IconViewInteractive } from "@/pagesComponents/three/iconview/interactive/v2/IconViewInteractive";
 import { loadFont } from "@/pagesComponents/three/iconview/load-font";
 import { useBasicview } from "@/pagesComponents/three/useBasicView";
 
