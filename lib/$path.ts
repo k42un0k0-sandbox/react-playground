@@ -36,6 +36,9 @@ export const pagesPath = {
     mush: {
       $url: (url?: { hash?: string }) => ({ pathname: '/three/mush' as const, hash: url?.hash })
     },
+    particle_animation: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/three/particle-animation' as const, hash: url?.hash })
+    },
     shader: {
       canvas: {
         $01: {

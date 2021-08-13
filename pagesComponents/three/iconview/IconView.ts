@@ -154,7 +154,6 @@ export class IconView extends BasicView {
     context.font = fontSize + "px serif";
     context.textAlign = "center";
     context.textBaseline = "top";
-    canvas.style.border = "1px solid white";
 
     context.fillText(label, w / 2, 4);
 
