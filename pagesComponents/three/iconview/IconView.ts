@@ -21,7 +21,7 @@ export class IconView extends BasicView {
     this.addLight();
     this.addBG();
 
-    this.createLetter("HELLO");
+    this.createLetter("魑魅魍魎");
   }
   private addBG() {
     const geometry = new THREE.PlaneGeometry(5000, 5000, 1, 1);

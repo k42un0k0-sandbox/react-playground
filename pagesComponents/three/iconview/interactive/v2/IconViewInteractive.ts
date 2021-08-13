@@ -20,6 +20,7 @@ export class IconViewInteractive extends BasicView {
     this.renderer.domElement.style.position = "absolute";
     this.renderer.domElement.style.top = "0px";
     this.touchTexture = new TouchTexture(this.canvas_width, this.canvas_height);
+    this.touchTexture.texture.flipY = false;
     this.initHitArea();
     this.initInteractive();
     this.initPoints();
@@ -31,7 +32,7 @@ export class IconViewInteractive extends BasicView {
     const angles_base = [];
     const icons_base = [];
     const labelCanvas = createLabelCanvas(
-      "HELLO",
+      "魑魅魍魎",
       40,
       this.canvas_width,
       this.canvas_height
@@ -51,7 +52,7 @@ export class IconViewInteractive extends BasicView {
           -j * 3 + item.length * 1.5,
           0
         );
-
+        indices_base.push(i / existDotList.length, j / item.length);
         icons_base.push(
           Math.floor(Math.random() * this.icon_matrix) / this.icon_matrix,
           Math.floor(Math.random() * this.icon_matrix) / this.icon_matrix,
