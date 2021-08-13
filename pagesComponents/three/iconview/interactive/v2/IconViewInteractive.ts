@@ -1,12 +1,12 @@
 import * as THREE from "three";
 import { BasicView } from "../../../BasicView";
 import vert from "./vert.glsl";
+import vert_copy from "./vert_copy.glsl";
 import frag from "./frag.glsl";
 import { createFontAwesomeCanvas, createLabelCanvas } from "../../canvas";
 import { imageBinarization } from "../../imageBinarization";
 import { TouchTexture } from "../TouchTexture";
 import { InteractiveControls } from "../InteractiveControls";
-
 export class IconViewInteractive extends BasicView {
   canvas_width = 250;
   canvas_height = 40;
@@ -93,8 +93,37 @@ export class IconViewInteractive extends BasicView {
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
+    const material_copy = new THREE.ShaderMaterial({
+      uniforms: {
+        size: {
+          value: 30.0,
+        },
+        tex: {
+          value: tex,
+        },
+        touch: {
+          value: this.touchTexture.texture,
+        },
+      },
+      vertexShader: vert_copy,
+      fragmentShader: frag,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const button = document.createElement("button");
+    button.innerText = "押せ";
+    let flag = false;
+
+    this.containerElement.append(button);
+    button.style.position = "absolute";
+    button.style.top = "0";
 
     const points = new THREE.Points(geometry, material);
+    button.addEventListener("click", () => {
+      points.material = flag ? material_copy : material;
+      flag = !flag;
+    });
     this.scene.add(points);
   }
 

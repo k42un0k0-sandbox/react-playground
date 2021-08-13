@@ -8,7 +8,7 @@ varying vec3 vIcon;
 
 void main() {
     vec4 color = texture2D(touch, indice);
-    float force = length(color.xyz)*30.;
+    float force = length(color.xyz)*100.;
     float z = force;
     float x = force * cos(angle);
     float y = force * sin(angle);
