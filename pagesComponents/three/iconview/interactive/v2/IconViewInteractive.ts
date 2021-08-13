@@ -51,7 +51,6 @@ export class IconViewInteractive extends BasicView {
           -j * 3 + item.length * 1.5,
           0
         );
-        indices_base.push(i / this.canvas_width, j / this.canvas_height);
 
         icons_base.push(
           Math.floor(Math.random() * this.icon_matrix) / this.icon_matrix,
@@ -65,9 +64,9 @@ export class IconViewInteractive extends BasicView {
     const vertices = new Float32Array(vertices_base);
     geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
     const indices = new Float32Array(indices_base);
-    geometry.setAttribute("indices", new THREE.BufferAttribute(indices, 2));
+    geometry.setAttribute("indice", new THREE.BufferAttribute(indices, 2));
     const icons = new Float32Array(icons_base);
-    geometry.setAttribute("icons", new THREE.BufferAttribute(icons, 3));
+    geometry.setAttribute("icon", new THREE.BufferAttribute(icons, 3));
     const angles = new Float32Array(angles_base);
     geometry.setAttribute("angle", new THREE.BufferAttribute(angles, 1));
 
@@ -94,7 +93,7 @@ export class IconViewInteractive extends BasicView {
       blending: THREE.AdditiveBlending,
     });
 
-    const points = new THREE.Mesh(geometry, material);
+    const points = new THREE.Points(geometry, material);
     this.scene.add(points);
   }
 
