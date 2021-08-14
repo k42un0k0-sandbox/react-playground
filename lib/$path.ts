@@ -8,6 +8,12 @@ export const pagesPath = {
       }),
       $url: (url?: { hash?: string }) => ({ pathname: '/animation/gallery' as const, hash: url?.hash })
     },
+    images_canvas: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/animation/images-canvas' as const, hash: url?.hash })
+    },
+    intro: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/animation/intro' as const, hash: url?.hash })
+    },
     tinder: {
       $url: (url?: { hash?: string }) => ({ pathname: '/animation/tinder' as const, hash: url?.hash })
     }

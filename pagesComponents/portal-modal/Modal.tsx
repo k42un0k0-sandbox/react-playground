@@ -12,26 +12,35 @@ const defaultStyle = {
 export default function Modal({
   open,
   children,
+  waitTransition = true,
+  TransitionComponent = Fade,
 }: {
   open: boolean;
   children: React.ReactNode;
+  waitTransition?: boolean;
+  TransitionComponent?: React.VFC<{
+    onExit: () => void;
+    open: boolean;
+    children: React.ReactNode;
+  }>;
 }) {
   const [state, setState] = useState(open);
   useEffect(() => {
     if (open) setState(true);
-  }, [open]);
+    if (!waitTransition && !open) setState(open);
+  }, [open, waitTransition]);
   return (
     typeof document !== "undefined" &&
     ReactDOM.createPortal(
       state && (
-        <Fade
+        <TransitionComponent
           open={open}
           onExit={() => {
             setState(false);
           }}
         >
           {children}
-        </Fade>
+        </TransitionComponent>
       ),
       document.body
     )
