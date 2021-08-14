@@ -15,7 +15,7 @@ export function createFontAwesomeCanvas(
   iconList: number[] = defaultIconList
 ): HTMLCanvasElement {
   // 変数定義
-  const SIZE = 256;
+  const SIZE = 800;
   const canvas = createCanvas(SIZE * matrixLength, SIZE * matrixLength);
   const context = canvas.getContext("2d");
   const len = matrixLength * matrixLength;
@@ -33,7 +33,7 @@ export function createFontAwesomeCanvas(
     const y = SIZE * Math.floor(i / matrixLength) + SIZE / 2;
 
     context.fillStyle = "white";
-    context.font = "200px FontAwesome";
+    context.font = "20px FontAwesome";
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.fillText(char, x, y);
