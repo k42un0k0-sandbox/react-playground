@@ -2,6 +2,9 @@
 // prettier-ignore
 export const pagesPath = {
   animation: {
+    dnd: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/animation/dnd' as const, hash: url?.hash })
+    },
     gallery: {
       _id: (id: string | number) => ({
         $url: (url?: { hash?: string }) => ({ pathname: '/animation/gallery/[id]' as const, query: { id }, hash: url?.hash })
