@@ -19,6 +19,9 @@ export const pagesPath = {
     },
     tinder: {
       $url: (url?: { hash?: string }) => ({ pathname: '/animation/tinder' as const, hash: url?.hash })
+    },
+    zoom: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/animation/zoom' as const, hash: url?.hash })
     }
   },
   portal_modal: {
