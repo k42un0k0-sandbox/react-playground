@@ -69,6 +69,11 @@ export const pagesPath = {
       $url: (url?: { hash?: string }) => ({ pathname: '/three/shader' as const, hash: url?.hash })
     }
   },
+  tips: {
+    effect_deps: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/tips/effect-deps' as const, hash: url?.hash })
+    }
+  },
   $url: (url?: { hash?: string }) => ({ pathname: '/' as const, hash: url?.hash })
 }
 
