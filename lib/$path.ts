@@ -70,6 +70,9 @@ export const pagesPath = {
     }
   },
   tips: {
+    abstract: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/tips/abstract' as const, hash: url?.hash })
+    },
     effect_deps: {
       $url: (url?: { hash?: string }) => ({ pathname: '/tips/effect-deps' as const, hash: url?.hash })
     }
