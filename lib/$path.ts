@@ -24,6 +24,11 @@ export const pagesPath = {
       $url: (url?: { hash?: string }) => ({ pathname: '/animation/zoom' as const, hash: url?.hash })
     }
   },
+  canvas: {
+    puzzle: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/canvas/puzzle' as const, hash: url?.hash })
+    }
+  },
   portal_modal: {
     $url: (url?: { hash?: string }) => ({ pathname: '/portal-modal' as const, hash: url?.hash })
   },
