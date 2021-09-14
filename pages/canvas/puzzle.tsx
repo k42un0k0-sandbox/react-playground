@@ -66,7 +66,20 @@ abstract class Entity {
   size: Size = { width: 0, height: 0 };
   constructor(protected _ctx: CanvasRenderingContext2D) {}
   abstract draw(parentPos: Position, parentSize: Size): void;
-  on<T extends keyof HTMLElementEventMap>(type: T, e: HTMLElementEventMap[T]) {}
+  on<T extends keyof HTMLElementEventMap>(
+    type: T,
+    e: HTMLElementEventMap[T],
+    parentPos: Position
+  ) {}
+  mayHit(e: MouseEvent, parentPos: Position) {
+    const pos = { x: e.clientX, y: e.clientY };
+    return (
+      parentPos.x + this.position.x < pos.x &&
+      pos.x < parentPos.x + this.position.x + this.size.width &&
+      parentPos.y + this.position.y < pos.y &&
+      pos.y < parentPos.y + this.position.y + this.size.height
+    );
+  }
 }
 
 class Container extends Entity {
@@ -104,29 +117,22 @@ class Container extends Entity {
     }
   }
 
-  on<T extends keyof HTMLElementEventMap>(type: T, e: HTMLElementEventMap[T]) {
+  on<T extends keyof HTMLElementEventMap>(
+    type: T,
+    e: HTMLElementEventMap[T],
+    parentPos: Position
+  ) {
     if (e instanceof MouseEvent) {
-      if (type === "mousedown") console.log(e.clientX, e.clientY);
       this.scanEntitiesFromTop((entity) => {
-        if (mayHit(entity, e)) {
-          if (type === "mousedown") console.log(entity);
-          if (type === "mouseup") console.log(entity);
-          entity.on(type, e);
+        if (entity.mayHit(e, this.computedPos(parentPos))) {
+          entity.on(type, e, this.computedPos(parentPos));
           return true;
         }
       });
     }
   }
 }
-function mayHit(entity: Entity, e: MouseEvent) {
-  const pos = { x: e.clientX, y: e.clientY };
-  return (
-    entity.position.x < pos.x && pos.x < entity.position.x + entity.size.width
-    //  &&
-    // entity.position.y < pos.y &&
-    // pos.y < entity.position.y + entity.size.height
-  );
-}
+
 class Scene extends Container {
   constructor(ctx: CanvasRenderingContext2D, _canvas: HTMLCanvasElement);
   constructor(
@@ -143,9 +149,24 @@ class Scene extends Container {
   ) {
     super(ctx);
     this.size = { width, height };
-    this._canvas.addEventListener("mouseup", (e) => this.on("mouseup", e));
-    this._canvas.addEventListener("mousemove", (e) => this.on("mousemove", e));
-    this._canvas.addEventListener("mousedown", (e) => this.on("mousedown", e));
+    this._canvas.addEventListener("mouseup", (e) =>
+      this.on("mouseup", e, {
+        x: this.position.x + this._canvas.getBoundingClientRect().left,
+        y: this.position.y + this._canvas.getBoundingClientRect().top,
+      })
+    );
+    this._canvas.addEventListener("mousemove", (e) =>
+      this.on("mousemove", e, {
+        x: this.position.x + this._canvas.getBoundingClientRect().left,
+        y: this.position.y + this._canvas.getBoundingClientRect().top,
+      })
+    );
+    this._canvas.addEventListener("mousedown", (e) =>
+      this.on("mousedown", e, {
+        x: this.position.x + this._canvas.getBoundingClientRect().left,
+        y: this.position.y + this._canvas.getBoundingClientRect().top,
+      })
+    );
   }
   getMousePos(e: MouseEvent) {
     var rect = this._canvas.getBoundingClientRect();
@@ -165,28 +186,39 @@ class Scene extends Container {
       { width: this.size.width, height: this.size.height }
     );
 
-    setTimeout(this.draw.bind(this), 100);
+    requestAnimationFrame(this.draw.bind(this));
   }
   start() {
     this.draw();
   }
 }
 class Pannel extends Container {
-  //   private moveEntityToTop(i: number) {
-  //     const entity = this.entities[i];
-  //     this.entities.splice(i, 1).push(entity);
-  //   }
-  //   on<T extends keyof HTMLElementEventMap>(type: T, e: HTMLElementEventMap[T]) {
-  //     super.on(type, e);
-  //     if (e instanceof MouseEvent) {
-  //       this.scanEntitiesFromTop((entity, i) => {
-  //         if (mayHit(entity, e)) {
-  //           this.moveEntityToTop(i);
-  //           return true;
-  //         }
-  //       });
-  //     }
-  //   }
+  private moveEntityToTop(i: number) {
+    const entity = this.entities[i];
+    this.entities.splice(i, 1);
+    this.entities.push(entity);
+  }
+  on<T extends keyof HTMLElementEventMap>(
+    type: T,
+    event: HTMLElementEventMap[T],
+    parentPos: Position
+  ) {
+    super.on(type, event, parentPos);
+    const tuple: [keyof HTMLElementEventMap, HTMLElementEventMap[T]] = [
+      type,
+      event,
+    ];
+    if (onGuard("mousedown", tuple)) {
+      const [t, e] = tuple;
+      this.scanEntitiesFromTop((entity, i) => {
+        if (entity.mayHit(e, this.computedPos(parentPos))) {
+          this.moveEntityToTop(i);
+          return true;
+        }
+      });
+      return;
+    }
+  }
 }
 
 class Piece extends Entity {
@@ -206,6 +238,8 @@ class Piece extends Entity {
     this.size = { width, height };
   }
   draw(parentPos: Position): void {
+    this._ctx.save();
+    this._ctx.globalCompositeOperation = "multiply";
     this._ctx.drawImage(
       this._image,
       this._ix * this.size.width,
@@ -217,6 +251,7 @@ class Piece extends Entity {
       this.size.width,
       this.size.height
     );
+    this._ctx.restore();
   }
   on<T extends keyof HTMLElementEventMap>(
     ...tuple: [type: T, event: HTMLElementEventMap[T]]
@@ -233,6 +268,7 @@ class Piece extends Entity {
         x: this.position.x + (pos.x - this.isMoving.x),
         y: this.position.y + (pos.y - this.isMoving.y),
       };
+      this.isMoving = pos;
     }
     if (onGuard("mouseup", tuple) && !!this.isMoving) {
       const [_, event] = tuple;
