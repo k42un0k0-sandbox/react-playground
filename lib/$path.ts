@@ -20,6 +20,12 @@ export const pagesPath = {
     tinder: {
       $url: (url?: { hash?: string }) => ({ pathname: '/animation/tinder' as const, hash: url?.hash })
     },
+    water: {
+      surface: {
+        $url: (url?: { hash?: string }) => ({ pathname: '/animation/water/surface' as const, hash: url?.hash })
+      },
+      $url: (url?: { hash?: string }) => ({ pathname: '/animation/water' as const, hash: url?.hash })
+    },
     zoom: {
       $url: (url?: { hash?: string }) => ({ pathname: '/animation/zoom' as const, hash: url?.hash })
     }
@@ -41,6 +47,11 @@ export const pagesPath = {
     },
     zustand: {
       $url: (url?: { hash?: string }) => ({ pathname: '/state-management/zustand' as const, hash: url?.hash })
+    }
+  },
+  svg: {
+    filter: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/svg/filter' as const, hash: url?.hash })
     }
   },
   three: {
