@@ -65,7 +65,13 @@ export class TouchTexture {
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  addTouch(point) {
+  /**
+   * 
+   * @param point 座標
+   * @param point.x x座標(0~1)
+   * @param point.y y座標(0~1)
+   */
+  addTouch(point:{x:number,y:number}) {
     let force = 0;
     const last = this.trail[this.trail.length - 1];
     if (last) {
@@ -105,7 +111,6 @@ export class TouchTexture {
     );
     grd.addColorStop(0, `rgba(255, 255, 255, 0.2)`);
     grd.addColorStop(1, "rgba(0, 0, 0, 0.0)");
-
     this.ctx.beginPath();
     this.ctx.fillStyle = grd;
     this.ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
