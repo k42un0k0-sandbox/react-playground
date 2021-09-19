@@ -54,6 +54,9 @@ export const pagesPath = {
   },
   svg: {
     filter: {
+      with_canvas: {
+        $url: (url?: { hash?: string }) => ({ pathname: '/svg/filter/with-canvas' as const, hash: url?.hash })
+      },
       $url: (url?: { hash?: string }) => ({ pathname: '/svg/filter' as const, hash: url?.hash })
     }
   },
