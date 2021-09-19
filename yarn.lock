@@ -4975,6 +4975,11 @@ csstype@^3.0.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.8.tgz#d2266a792729fb227cd216fb572f43728e1ad340"
   integrity sha512-jXKhWqXPmlUeoQnF/EhTtTl4C9SnrxSH/jZUih3jmO6lBKr99rP3/+FmrMj4EFpOXzMtXHAZkd3x0E6h6Fgflw==
 
+curtainsjs@>=8.1.0, curtainsjs@^8.1.2:
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/curtainsjs/-/curtainsjs-8.1.2.tgz#decf1a688957cdb8fc3eecbee0a250cb399beee1"
+  integrity sha512-JQTBmYCc5uqJ3eHRru32cw9y5tYqwvRofhQB4af6Ic0ENegrUhRh/ENNg130MTMoeIS+fumTxRYIsmv5FEgv0Q==
+
 cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
@@ -9723,6 +9728,13 @@ react-colorful@^5.1.2:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.3.0.tgz#bcbae49c1affa9ab9a3c8063398c5948419296bd"
   integrity sha512-zWE5E88zmjPXFhv6mGnRZqKin9s5vip1O3IIGynY9EhZxN8MATUxZkT3e/9OwTEm4DjQBXc6PFWP6AetY+Px+A==
+
+react-curtains@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/react-curtains/-/react-curtains-1.0.10.tgz#e697c1cd6ec2d2c97d8dbaca043305d75fd43bfa"
+  integrity sha512-8bzyl/v8nYDUlYUlTGvj7WWrzIcJaGO1W+jv3oIWZkeJtBpd1KoJRGS4cTXJIOiEyLsVUMBOp9i5bK+Po7Ow7w==
+  dependencies:
+    curtainsjs ">=8.1.0"
 
 react-dev-utils@^11.0.3:
   version "11.0.4"

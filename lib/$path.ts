@@ -2,6 +2,9 @@
 // prettier-ignore
 export const pagesPath = {
   animation: {
+    curtain: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/animation/curtain' as const, hash: url?.hash })
+    },
     dnd: {
       $url: (url?: { hash?: string }) => ({ pathname: '/animation/dnd' as const, hash: url?.hash })
     },
