@@ -23,6 +23,11 @@ export const pagesPath = {
     tinder: {
       $url: (url?: { hash?: string }) => ({ pathname: '/animation/tinder' as const, hash: url?.hash })
     },
+    transform: {
+      tilt: {
+        $url: (url?: { hash?: string }) => ({ pathname: '/animation/transform/tilt' as const, hash: url?.hash })
+      }
+    },
     water: {
       surface: {
         $url: (url?: { hash?: string }) => ({ pathname: '/animation/water/surface' as const, hash: url?.hash })
