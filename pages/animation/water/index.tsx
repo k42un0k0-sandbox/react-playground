@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useSpring, animated as anim } from "react-spring";
-import "styles/water.css";
 
 const fast = { tension: 1200, friction: 40 };
 const slow = { mass: 10, tension: 200, friction: 50 };

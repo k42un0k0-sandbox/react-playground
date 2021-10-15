@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import { Stack } from "../../pagesComponents/animation/tinder/Stack";
-import Fullsize from "../../components/layout/FullSize";
+import Fullsize from "../../components/layout/Fullsize";
 
 const flexCentering = css`
   display: flex;

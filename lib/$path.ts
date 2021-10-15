@@ -43,6 +43,14 @@ export const pagesPath = {
       $url: (url?: { hash?: string }) => ({ pathname: '/canvas/puzzle' as const, hash: url?.hash })
     }
   },
+  performance: {
+    repeat: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/performance/repeat' as const, hash: url?.hash })
+    },
+    worker: {
+      $url: (url?: { hash?: string }) => ({ pathname: '/performance/worker' as const, hash: url?.hash })
+    }
+  },
   portal_modal: {
     $url: (url?: { hash?: string }) => ({ pathname: '/portal-modal' as const, hash: url?.hash })
   },

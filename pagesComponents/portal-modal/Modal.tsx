@@ -56,7 +56,7 @@ function Fade({
   open: boolean;
   children: React.ReactNode;
 }) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     setTimeout(() => {
       ref.current.style.opacity = open ? "1" : "0";
