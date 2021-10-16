@@ -2,9 +2,6 @@
 // prettier-ignore
 export const pagesPath = {
   animation: {
-    curtain: {
-      $url: (url?: { hash?: string }) => ({ pathname: '/animation/curtain' as const, hash: url?.hash })
-    },
     dnd: {
       $url: (url?: { hash?: string }) => ({ pathname: '/animation/dnd' as const, hash: url?.hash })
     },
@@ -110,6 +107,14 @@ export const pagesPath = {
     },
     effect_deps: {
       $url: (url?: { hash?: string }) => ({ pathname: '/tips/effect-deps' as const, hash: url?.hash })
+    },
+    lie_between_pages: {
+      a: {
+        $url: (url?: { hash?: string }) => ({ pathname: '/tips/lie_between_pages/a' as const, hash: url?.hash })
+      },
+      b: {
+        $url: (url?: { hash?: string }) => ({ pathname: '/tips/lie_between_pages/b' as const, hash: url?.hash })
+      }
     }
   },
   $url: (url?: { hash?: string }) => ({ pathname: '/' as const, hash: url?.hash })
